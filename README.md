@@ -80,5 +80,5 @@ Pour tester la console d'administration, utilise les identifiants par défaut su
 - **Mot de passe** : `admin123`
 
 ---
-Développé avec ❤️ pour l'écosystème Tech Camerounais.
+Développé avec ❤️ par l'equipe Free team
  
