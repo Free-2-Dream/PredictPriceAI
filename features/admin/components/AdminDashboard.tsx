@@ -1,10 +1,19 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { ChevronRight, Database, TrendingUp, RefreshCw, Settings, LayoutGrid } from 'lucide-react';
 import { performanceData } from '@/data/mockData';
 
 export const AdminDashboard = () => {
+  const router = useRouter();
+
+  const handleActionClick = (title: string) => {
+    if (title === 'Changer les identifiants') {
+      router.push('/admin/change-credentials');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
       {/* Dashboard Header */}
@@ -50,9 +59,9 @@ export const AdminDashboard = () => {
               { icon: <RefreshCw size={24} />, title: 'Réentraîner les modèles', sub: 'Mettre à jour les algorithmes Prophet', color: 'bg-blue-500 shadow-blue-200' },
               { icon: <TrendingUp size={24} />, title: 'Rapports de Performance', sub: 'Analyse détaillée MAE, RMSE, MAPE', color: 'bg-amber-500 shadow-amber-200' },
               { icon: <Database size={24} />, title: 'Importer des données', sub: 'Charger de nouveaux fichiers CSV de prix', color: 'bg-orange-500 shadow-orange-200' },
-              { icon: <Settings size={24} />, title: 'Sécurité & Accès', sub: 'Gérer les identifiants et permissions', color: 'bg-rose-500 shadow-rose-200' },
+              { icon: <Settings size={24} />, title: 'Changer les identifiants', sub: 'Email et mot de passe', color: 'bg-rose-500 shadow-rose-200' },
             ].map((action, i) => (
-              <div key={i} className="bg-white rounded-3xl p-6 flex items-center gap-6 border border-transparent hover:border-[#1D9E75]/20 hover:shadow-xl transition-all cursor-pointer group">
+              <div key={i} onClick={() => handleActionClick(action.title)} className="bg-white rounded-3xl p-6 flex items-center gap-6 border border-transparent hover:border-[#1D9E75]/20 hover:shadow-xl transition-all cursor-pointer group">
                 <div className={`w-16 h-16 rounded-2xl ${action.color} text-white flex items-center justify-center shadow-lg transition-transform group-hover:rotate-6`}>
                   {action.icon}
                 </div>

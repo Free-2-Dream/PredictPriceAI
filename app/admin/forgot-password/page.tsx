@@ -1,17 +1,32 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, ArrowLeft, Send, CheckCircle2 } from 'lucide-react';
+import { Mail, ArrowLeft, Send, CheckCircle2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import axios from 'axios';
 
 export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (email) {
+    setError('');
+    setLoading(true);
+
+    try {
+      await axios.post('/api/auth/forgot-password', { email });
       setSubmitted(true);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Une erreur est survenue. Réessayez.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,12 +69,19 @@ export default function ForgotPasswordPage() {
                 </div>
               </div>
 
+              {error && (
+                <div className="px-4 py-3 rounded-xl bg-red-50 text-red-600 text-sm font-medium">
+                  {error}
+                </div>
+              )}
+
               <button 
                 type="submit"
-                className="w-full bg-[#1D9E75] text-white py-5 rounded-2xl font-black text-lg shadow-lg shadow-[#1D9E75]/20 hover:bg-[#15805d] transition-all transform active:scale-[0.98] flex items-center justify-center gap-3"
+                disabled={loading}
+                className="w-full bg-[#1D9E75] text-white py-5 rounded-2xl font-black text-lg shadow-lg shadow-[#1D9E75]/20 hover:bg-[#15805d] disabled:opacity-60 transition-all flex items-center justify-center gap-3"
               >
-                Envoyer le lien
-                <Send size={20} />
+                {loading ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
+                {loading ? 'Envoi en cours...' : 'Envoyer le lien'}
               </button>
             </form>
           </>
